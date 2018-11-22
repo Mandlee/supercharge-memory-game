@@ -11,6 +11,7 @@ import _concat from 'lodash/concat';
 
 import './scss/App.scss';
 import Scoreboard from "./components/Scoreboard";
+import {changeStatusOfSelected, filterCards, isMatching} from "./helpers";
 
 const CARDS = ['angular', 'd3', 'jenkins', 'postcss', 'react', 'redux', 'sass', 'supercharge', 'ts', 'webpack'];
 
@@ -40,17 +41,12 @@ class App extends Component {
         this.flipCard = this.flipCard.bind(this);
     }
 
-    // Filtered and duplicate items
-    filterCards = (cards, deckSize) => {
-        let filteredCards = cards.slice(0, deckSize);
-        return filteredCards.concat(filteredCards);
-    };
 
     // Start game
     startGame(deckSize) {
         console.log(deckSize);
 
-        let multipliedCards = this.filterCards(CARDS, deckSize || Object.keys(this.state.cards).length / 2);
+        let multipliedCards = filterCards(CARDS, deckSize || Object.keys(this.state.cards).length / 2);
         console.log(multipliedCards);
 
         let shuffled = _shuffle(multipliedCards);
@@ -74,6 +70,9 @@ class App extends Component {
         });
     }
 
+    /**
+     * Reseting the game
+     */
     resetGame() {
         this.setState({
                 cards: [],
@@ -88,8 +87,6 @@ class App extends Component {
      * @param index
      */
     flipCard(index) {
-        console.log('card type=' + this.state.cards[index].type + ', index=' + index);
-
         if (this.state.locked) {
             console.log('locked, try later');
             return
@@ -101,7 +98,7 @@ class App extends Component {
         let cards = this.state.cards;
         console.log(cards);
 
-        cards[selectedCards[selectedCards.length - 1]].status = "selected";
+        cards[selectedCards[selectedCards.length - 1]].status = STATUS.SELECTED;
 
         if (selectedCards.length > 1) {
             this.setState({
@@ -134,9 +131,9 @@ class App extends Component {
 
     checkMatch = (cards, selectedCards) => {
         console.log(cards, selectedCards);
-        if (this.isMatching(cards, selectedCards)) {
+        if (isMatching(cards, selectedCards)) {
             console.log('match');
-            this.changeStatusOfSelected(cards, selectedCards, STATUS.REMOVED);
+            changeStatusOfSelected(cards, selectedCards, STATUS.REMOVED);
             if (this.isWin(cards)) {
                 alert('your winner! :)');
                 if (this.state.highScore > this.state.currentScore) {
@@ -147,7 +144,7 @@ class App extends Component {
             }
         } else {
             console.log('no match');
-            this.changeStatusOfSelected(cards, selectedCards, STATUS.UNSELECTED)
+            changeStatusOfSelected(cards, selectedCards, STATUS.UNSELECTED)
         }
         return cards;
     };
@@ -166,16 +163,6 @@ class App extends Component {
         return winTest;
     };
 
-    isMatching = (cards, selectedCards) => {
-        return cards[selectedCards[0]].type === cards[selectedCards[1]].type
-    };
-
-    changeStatusOfSelected = (cards, selectedCards, newStatus) => {
-        for (let value of selectedCards) {
-            cards[value].status = newStatus;
-        }
-        return cards;
-    };
 
     renderApp = () => {
         if (!this.state.isGameStart) {
