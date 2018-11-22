@@ -1,0 +1,10 @@
+// Override default variables before the import
+$body-bg: #f2f2f2;
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+@import "header";
+
+.start-game {
+  text-align: center;
+}
