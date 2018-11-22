@@ -27,8 +27,8 @@ class StartScreen extends React.Component {
         return (
             <div className="start-game">
                 <div className="container">
-                    <h1>Supercharge</h1>
-                    <h2>Memory Game</h2>
+                    <h1 className="company-title">Supercharge</h1>
+                    <h2 className="game-name">Memory Game</h2>
                     <form onSubmit={this.handleSubmit}>
                         <label htmlFor="deck-size">Deck size:</label>
                         <select ref={this.deckSize} value={this.state.value} onChange={this.handleChange}>
@@ -38,7 +38,7 @@ class StartScreen extends React.Component {
                             <option value="6">6</option>
                             <option value="10">10</option>
                         </select>
-                        <button type="submit" className="btn-primary btn">Start New Game</button>
+                        <button type="submit" className="btn-primary btn start-game-btn">Start New Game</button>
                     </form>
                 </div>
             </div>
