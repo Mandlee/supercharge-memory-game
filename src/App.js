@@ -27,7 +27,7 @@ class App extends Component {
         this.state = {
             cards: [],
             selectedCards: [],
-            gameStart: 0,
+            isGameStart: 0,
             highScore: 14, //just sample
             currentScore: 0,
             locked: false
@@ -47,7 +47,6 @@ class App extends Component {
     startGame(deckSize) {
         console.log(deckSize);
 
-        //TODO decksize restart
         let multipliedCards = this.filterCards(CARDS, deckSize || Object.keys(this.state.cards).length / 2);
         console.log(multipliedCards);
 
@@ -66,7 +65,7 @@ class App extends Component {
         this.setState({
             cards: cards,
             selectedCards: [],
-            gameStart: 1,
+            isGameStart: 1,
             currentScore: 0,
             locked: false
         });
@@ -126,13 +125,33 @@ class App extends Component {
         if (this.isMatching(cards, selectedCards)) {
             console.log('match');
             this.changeStatusOfSelected(cards, selectedCards, STATUS.REMOVED);
-            //TODO win check
+            if (this.isWin(cards)) {
+                alert('your winner! :)');
+                if (this.state.highScore > this.state.currentScore) {
+                    this.setState({
+                        highScore: this.state.currentScore
+                    })
+                }
+            }
         } else {
             console.log('no match');
             this.changeStatusOfSelected(cards, selectedCards, STATUS.UNSELECTED)
         }
-        //TODO score
         return cards;
+    };
+
+    isWin = (cards) => {
+        console.log(cards);
+        let winTest = cards.reduce(function (accumlator, currentValue) {
+            console.log(accumlator, currentValue);
+            if (accumlator === currentValue.status) {
+                return accumlator;
+            } else {
+                return false;
+            }
+        }, STATUS.REMOVED);
+        console.log(winTest);
+        return winTest;
     };
 
     isMatching = (cards, selectedCards) => {
@@ -146,13 +165,14 @@ class App extends Component {
         return cards;
     };
 
-    render() {
-        return (
-            <div className="App">
-                <Header startGame={this.startGame}/>
-                {!this.state.gameStart &&
+    renderApp = () => {
+        if (!this.state.isGameStart) {
+            return (
                 <StartScreen startGame={this.startGame}/>
-                }
+            )
+        }
+        return (
+            <React.Fragment>
                 <Scoreboard startGame={this.startGame} currentScore={this.state.currentScore}
                             highScore={this.state.highScore}/>
                 <div className="card-container">
@@ -165,6 +185,15 @@ class App extends Component {
                         ))}
                     </div>
                 </div>
+            </React.Fragment>
+        )
+    };
+
+    render() {
+        return (
+            <div className="App">
+                <Header startGame={this.startGame} isGameStart={this.state.isGameStart}/>
+                {this.renderApp()}
             </div>
         );
     }
