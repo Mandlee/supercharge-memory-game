@@ -11,6 +11,8 @@ import './scss/App.scss';
 
 const CARDS = ['angular', 'd3', 'jenkins', 'postcss', 'react', 'redux', 'sass', 'supercharge', 'ts', 'webpack'];
 
+const TIME_OUT_DELAY = 800;
+
 const STATUS = {
     SELECTED: 'selected',
     UNSELECTED: 'unselected',
@@ -69,28 +71,68 @@ class App extends Component {
      */
     flipCard(index) {
         console.log('card type=' + this.state.cards[index].type + ', index=' + index);
-
-        // Add selected card
         let selectedCards = _concat(this.state.selectedCards, index);
         console.log(selectedCards);
 
-        // copy state
         let cards = this.state.cards;
         console.log(cards);
 
-        // Flip cards
-        cards[selectedCards[selectedCards.length - 1]].status = STATUS.SELECTED;
+        cards[selectedCards[selectedCards.length - 1]].status = "selected";
 
-        this.setState({
-            selectedCards,
-            cards
-        })
+        if (selectedCards.length > 1) {
+            this.setState({
+                cards
+            });
+
+            setTimeout(() => {
+                cards = this.checkMatch(cards, selectedCards);
+                selectedCards = [];
+
+                this.setState({
+                    selectedCards,
+                    cards
+                });
+
+            }, TIME_OUT_DELAY);
+            
+        } else {
+            //First card
+            this.setState({
+                selectedCards,
+                cards
+            })
+        }
     }
+
+    checkMatch = (cards, selectedCards) => {
+        console.log(cards, selectedCards);
+        if (this.isMatching(cards, selectedCards)) {
+            console.log('match');
+            this.changeStatusOfSelected(cards, selectedCards, STATUS.REMOVED);
+            //TODO win check
+        } else {
+            console.log('no match');
+            this.changeStatusOfSelected(cards, selectedCards, STATUS.UNSELECTED)
+        }
+        //TODO score
+        return cards;
+    };
+
+    isMatching = (cards, selectedCards) => {
+        return cards[selectedCards[0]].type === cards[selectedCards[1]].type
+    };
+
+    changeStatusOfSelected = (cards, selectedCards, newStatus) => {
+        for (let value of selectedCards) {
+            cards[value].status = newStatus;
+        }
+        return cards;
+    };
 
     render() {
         return (
             <div className="App">
-                <Header/>
+                <Header startGame={this.startGame}/>
                 {!this.state.gameStart &&
                 <StartScreen startGame={this.startGame}/>
                 }
