@@ -1,3 +1,18 @@
 .scoreboard {
+  padding: 20px;
 
+  .best-value {
+    font-weight: bold;
+    font-size: 22px;
+    color: $text-primary;
+  }
+
+  .best-score {
+    font-size: 14px;
+    color: $text-secondary;
+  }
+
+  .current-tries {
+    color: $text-secondary;
+  }
 }

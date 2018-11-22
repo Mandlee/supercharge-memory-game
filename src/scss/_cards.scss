@@ -5,6 +5,24 @@
 }
 
 .cards {
+  &.cards-column-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &.cards-column-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  &.cards-column-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  &.cards-column-6 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  &.cards-column-10 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 

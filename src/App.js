@@ -8,6 +8,7 @@ import _shuffle from 'lodash/shuffle';
 import _concat from 'lodash/concat';
 
 import './scss/App.scss';
+import Scoreboard from "./components/Scoreboard";
 
 const CARDS = ['angular', 'd3', 'jenkins', 'postcss', 'react', 'redux', 'sass', 'supercharge', 'ts', 'webpack'];
 
@@ -26,7 +27,10 @@ class App extends Component {
         this.state = {
             cards: [],
             selectedCards: [],
-            gameStart: 0
+            gameStart: 0,
+            highScore: 14, //just sample
+            currentScore: 0,
+            locked: false
         };
 
         this.startGame = this.startGame.bind(this);
@@ -43,7 +47,8 @@ class App extends Component {
     startGame(deckSize) {
         console.log(deckSize);
 
-        let multipliedCards = this.filterCards(CARDS, deckSize);
+        //TODO decksize restart
+        let multipliedCards = this.filterCards(CARDS, deckSize || Object.keys(this.state.cards).length / 2);
         console.log(multipliedCards);
 
         let shuffled = _shuffle(multipliedCards);
@@ -61,7 +66,9 @@ class App extends Component {
         this.setState({
             cards: cards,
             selectedCards: [],
-            gameStart: 1
+            gameStart: 1,
+            currentScore: 0,
+            locked: false
         });
     }
 
@@ -71,6 +78,12 @@ class App extends Component {
      */
     flipCard(index) {
         console.log('card type=' + this.state.cards[index].type + ', index=' + index);
+
+        if (this.state.locked) {
+            console.log('locked, try later');
+            return
+        }
+
         let selectedCards = _concat(this.state.selectedCards, index);
         console.log(selectedCards);
 
@@ -81,20 +94,24 @@ class App extends Component {
 
         if (selectedCards.length > 1) {
             this.setState({
-                cards
+                cards,
+                locked: true
             });
 
             setTimeout(() => {
                 cards = this.checkMatch(cards, selectedCards);
                 selectedCards = [];
+                const currentScore = this.state.currentScore + 1;
 
                 this.setState({
                     selectedCards,
-                    cards
+                    cards,
+                    currentScore,
+                    locked: false
                 });
 
             }, TIME_OUT_DELAY);
-            
+
         } else {
             //First card
             this.setState({
@@ -136,8 +153,10 @@ class App extends Component {
                 {!this.state.gameStart &&
                 <StartScreen startGame={this.startGame}/>
                 }
+                <Scoreboard startGame={this.startGame} currentScore={this.state.currentScore}
+                            highScore={this.state.highScore}/>
                 <div className="card-container">
-                    <div className="cards">
+                    <div className={`cards cards-column-${Object.keys(this.state.cards).length / 2}`}>
                         {Object.keys(this.state.cards).map(key => (
                             <Card key={`card-${key}`}
                                   index={key}
