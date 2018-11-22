@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import SimpleStorage from "react-simple-storage";
+
 import Header from "./components/Header";
 import StartScreen from "./components/StartScreen";
 import Card from "./components/Card";
@@ -34,6 +36,7 @@ class App extends Component {
         };
 
         this.startGame = this.startGame.bind(this);
+        this.resetGame = this.resetGame.bind(this);
         this.flipCard = this.flipCard.bind(this);
     }
 
@@ -69,6 +72,15 @@ class App extends Component {
             currentScore: 0,
             locked: false
         });
+    }
+
+    resetGame() {
+        this.setState({
+                cards: [],
+                selectedCards: [],
+                isGameStart: 0
+            }
+        )
     }
 
     /**
@@ -192,7 +204,8 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Header startGame={this.startGame} isGameStart={this.state.isGameStart}/>
+                <SimpleStorage parent={this} />
+                <Header startGame={this.startGame} isGameStart={this.state.isGameStart} resetGame={this.resetGame}/>
                 {this.renderApp()}
             </div>
         );

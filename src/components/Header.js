@@ -50,7 +50,9 @@ class Header extends React.Component {
                     <span className="navbar-brand">
                         <img src={logo} width="30" height="30"
                              className="d-inline-block align-top logo"
-                             alt="logo"/>
+                             alt="Restart game"
+                             onClick={this.props.resetGame}
+                        />
                         Memory game
                     </span>
                     {this.renderDeckSelector()}
