@@ -8,4 +8,20 @@
   .navbar-brand {
     text-transform: uppercase;
   }
+
+  .navbar-nav{
+    margin-top: 0;
+  }
+
+  .header-deck-size {
+    color: white;
+
+    select {
+      margin: 0 20px;
+    }
+
+    .start-game-btn {
+      margin: 0;
+    }
+  }
 }
