@@ -1,39 +1,26 @@
 import React, {Component} from 'react';
-import logo from './svgs/supercharge-logo.svg';
 
 import './scss/App.scss';
+import Header from "./components/Header";
+import StartScreen from "./components/StartScreen";
+
+// const CARDS = ['angular', 'd3', 'jenkins', 'postcss', 'react', 'redux', 'sass', 'supercharge', 'ts', 'webpack'];
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.startGame = this.startGame.bind(this);
+    }
+
+    startGame(deckSize) {
+        console.log(deckSize);
+    }
+
     render() {
         return (
             <div className="App">
-                <header>
-                    <nav className="navbar navbar-dark bg-dark navbar-expand-md">
-                        <span className="navbar-brand">
-                            <img src={logo} width="30" height="30"
-                                 className="d-inline-block align-top logo"
-                                 alt="logo"/>
-                            Memory game
-                        </span>
-                    </nav>
-                </header>
-                <div className="start-game">
-                    <div className="container">
-                        <h1>Supercharge</h1>
-                        <h2>Memory Game</h2>
-                        <form>
-                            <label htmlFor="deck-size">Deck size:</label>
-                            <select>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="10">10</option>
-                            </select>
-                            <button type="submit" className="btn-primary btn">Start New Game</button>
-                        </form>
-                    </div>
-                </div>
+                <Header/>
+                <StartScreen startGame={this.startGame}/>
             </div>
         );
     }
