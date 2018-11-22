@@ -4,24 +4,45 @@
   align-items: center;
 }
 
+//Cards grid and breakpoints
 .cards {
   &.cards-column-3 {
     grid-template-columns: repeat(3, 1fr);
+
+    @include media-breakpoint-down(sm) {
+      .card {
+        width: calc(33vw - 20px);
+        height: calc(33vw - 20px);
+      }
+    }
   }
-  &.cards-column-4 {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  &.cards-column-5 {
-    grid-template-columns: repeat(5, 1fr);
-  }
+
+  &.cards-column-4,
   &.cards-column-6 {
     grid-template-columns: repeat(4, 1fr);
+
+    @include media-breakpoint-down(sm) {
+      .card {
+        width: calc(25vw - 20px);
+        height: calc(25vw - 20px);
+      }
+    }
   }
+
+  &.cards-column-5,
   &.cards-column-10 {
     grid-template-columns: repeat(5, 1fr);
+
+    @include media-breakpoint-down(sm) {
+      .card {
+        width: calc(20vw - 20px);
+        height: calc(20vw - 20px);
+      }
+    }
   }
 }
 
+//Cards style
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -29,7 +50,7 @@
   .card {
     width: 150px;
     height: 150px;
-    margin: 20px 20px 0 0;
+    margin: 10px;
     text-align: center;
     background: 0;
     border: 0;
